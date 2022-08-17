@@ -1,0 +1,22 @@
+{
+  "name": "puppeteer-fastify",
+  "version": "0.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": "seanghay/puppeteer-fastify",
+  "author": {
+    "name": "Seanghay Yath",
+    "email": "seanghay.dev@gmail.com",
+    "url": "https://github.com/seanghay"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "fastify": "^4.5.0"
+  },
+  "devDependencies": {
+    "puppeteer": "^16.1.1"
+  }
+}
