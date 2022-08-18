@@ -4,6 +4,10 @@ import puppeteer from "puppeteer";
 // Chromium
 const browser = await puppeteer.launch({
   args: [
+    '--in-process-gpu',
+    '--disable-speech-api',
+    '--single-process',
+    '--enable-features=SharedArrayBuffer',
     '--autoplay-policy=user-gesture-required',
     '--disable-background-networking',
     '--disable-background-timer-throttling',
@@ -15,7 +19,7 @@ const browser = await puppeteer.launch({
     '--disable-dev-shm-usage',
     '--disable-domain-reliability',
     '--disable-extensions',
-    '--disable-features=AudioServiceOutOfProcess',
+    '--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process',
     '--disable-hang-monitor',
     '--disable-ipc-flooding-protection',
     '--disable-notifications',
@@ -36,8 +40,12 @@ const browser = await puppeteer.launch({
     '--password-store=basic',
     '--use-gl=swiftshader',
     '--use-mock-keychain',
+    '--no-sandbox', 
+    '--no-zygote',
+    '--disable-setuid-sandbox'
   ],
   headless: true,
+
 })
 
 const page = await browser.newPage();
@@ -45,11 +53,9 @@ const page = await browser.newPage();
 page.setDefaultTimeout(0);
 page.setDefaultNavigationTimeout(0);
 
-
 const server = Fastify({ logger: false });
 
 async function createRespond(params, reply) {
-  
   const { html = '', w, h, s, q, t } = params;
 
   const width = parseInt(w) || 512;
@@ -70,7 +76,8 @@ async function createRespond(params, reply) {
     deviceScaleFactor: scale
   });
 
-  page.setContent(html)
+  const concatHtml =  `<p>${html}</p>`
+  page.setContent(concatHtml)
 
   const buffer = await page.screenshot({ type, quality });
   reply.type(`image/${type}`);
